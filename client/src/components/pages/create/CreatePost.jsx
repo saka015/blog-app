@@ -3,6 +3,7 @@ import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Navigate } from "react-router-dom";
+import { Editor } from "../../common/editor/Editor";
 
 const modules = {
   toolbar: [
@@ -56,7 +57,7 @@ export const CreatePost = () => {
   const [files, setFiles] = useState("");
   const [redirect, setRedirect] = useState(false);
 
-  const createNewPOst = async (e) => {
+  const CreateNewPost = async (e) => {
     const data = new FormData();
     data.set("title", title);
     data.set("summary", summary);
@@ -68,6 +69,7 @@ export const CreatePost = () => {
     const response = await fetch("http://localhost:4000/post", {
       method: "POST",
       body: data,
+      credentials: "include",
     });
 
     if (response.ok) {
@@ -82,7 +84,7 @@ export const CreatePost = () => {
       <h1 className="text-center text-2xl font-semibold underline">
         Create your new post
       </h1>
-      <form onSubmit={createNewPOst}>
+      <form onSubmit={CreateNewPost}>
         <Input
           type="text"
           variant="underlined"
@@ -105,12 +107,7 @@ export const CreatePost = () => {
           onChange={(e) => setFiles(e.target.files)}
         />
         <br />
-        <ReactQuill
-          value={content}
-          onChange={(newValue) => setContent(newValue)}
-          modules={modules}
-          formats={formats}
-        />
+        <Editor value={content} onChange={setContent} />
         <Button
           variant="ghost"
           color="success"

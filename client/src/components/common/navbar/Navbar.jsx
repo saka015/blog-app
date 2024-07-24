@@ -22,7 +22,7 @@ export default function App() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setUsername(data.username);
+        setUserInfo(data.username);
       })
       .catch((error) => {
         console.error("Error fetching profile data:", error);
