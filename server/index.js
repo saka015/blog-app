@@ -12,6 +12,8 @@ const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const app = express();
 
+app.use("/uploads", express.static(__dirname + "/uploads"));
+
 const mongoURI =
   process.env.MONGO_URI ||
   "mongodb+srv://skn8454:saka123@cluster0.in6mqqz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -112,15 +114,87 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
 
-  const { title, summary, content } = req.body;
-  const postDoc = await Post.create({
-    title,
-    summary,
-    content,
-    cover: newPath,
+  const { token } = req.cookies;
+  jwt.verify(token, SECRET_KEY, {}, async (err, info) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    const { title, summary, content } = req.body;
+    const postDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+    res.json({ postDoc });
   });
+});
 
-  res.json({ postDoc });
+// get all posts
+app.get("/post", async (req, res) => {
+  res.json(
+    await Post.find()
+      .populate("author", ["username"])
+      .sort({ createdAt: -1 })
+      .limit(20)
+  );
+});
+
+// get a single post
+app.get("/post/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const postDoc = await Post.findById(id).populate("author", ["username"]);
+    if (!postDoc) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    res.json(postDoc);
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// edit a post
+app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
+  let newPath = null;
+  if (req.file) {
+    const { originalname, path } = req.file;
+    const parts = originalname.split(".");
+    const ext = parts[parts.length - 1];
+    newPath = path + "." + ext;
+    fs.renameSync(path, newPath);
+  }
+
+  const { token } = req.cookies;
+  jwt.verify(token, SECRET_KEY, {}, async (err, info) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    const { id, title, summary, content } = req.body;
+    const postDoc = await Post.findById(id);
+    if (!postDoc) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+    if (!isAuthor) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Update the post document fields
+    postDoc.title = title;
+    postDoc.summary = summary;
+    postDoc.content = content;
+    postDoc.cover = newPath ? newPath : postDoc.cover;
+
+    // Save the updated post document
+    await postDoc.save();
+
+    res.json({ postDoc });
+  });
 });
 
 // Start server
