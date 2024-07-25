@@ -36,7 +36,7 @@ export default function Post({
                 <Link to={`/post/${_id}`}>
                   <Image
                     className="w-screen md:w-[500px]"
-                    src={"http://localhost:4000/" + cover}
+                    src={"https://blog-backend-0ii5.onrender.com/" + cover}
                     fallbackSrc="https://via.placeholder.com/300x200"
                     alt="NextUI Image with fallback"
                   />

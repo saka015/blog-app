@@ -15,7 +15,7 @@ export default function App() {
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:4000/profile", {
+    fetch("https://blog-backend-0ii5.onrender.com/profile", {
       credentials: "include",
     })
       .then((response) => response.json())
@@ -28,13 +28,12 @@ export default function App() {
   }, []);
 
   const logout = () => {
-    fetch("http://localhost:4000/logout", {
+    fetch("https://blog-backend-0ii5.onrender.com/logout", {
       credentials: "include",
       method: "POST",
     });
-    setUserInfo('');
+    setUserInfo("");
     setRedirect(true);
-    
   };
 
   if (redirect) {

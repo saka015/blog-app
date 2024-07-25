@@ -60,7 +60,6 @@ export const CreatePost = () => {
 
   const { userInfo } = useContext(UserContext);
 
-
   const CreateNewPost = async (e) => {
     const data = new FormData();
     data.set("title", title);
@@ -70,11 +69,14 @@ export const CreatePost = () => {
     console.log(files);
     e.preventDefault();
 
-    const response = await fetch("http://localhost:4000/post", {
-      method: "POST",
-      body: data,
-      credentials: "include",
-    });
+    const response = await fetch(
+      "https://blog-backend-0ii5.onrender.com/post",
+      {
+        method: "POST",
+        body: data,
+        credentials: "include",
+      }
+    );
 
     if (response.ok) {
       setRedirect(true);

@@ -6,30 +6,33 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const {setUserInfo} = useContext(UserContext);
+  const { setUserInfo } = useContext(UserContext);
 
   async function login(e) {
     e.preventDefault();
     console.log(username, password);
 
     try {
-      const response = await fetch("http://localhost:4000/login", {
-        method: "POST",
-        credentials: "include", //include cookies
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
+      const response = await fetch(
+        "https://blog-backend-0ii5.onrender.com/login",
+        {
+          method: "POST",
+          credentials: "include", //include cookies
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        }
+      );
 
       if (response.ok) {
         response.json().then((userInfo) => {
-          setUserInfo(userInfo)
+          setUserInfo(userInfo);
           setRedirect(true);
-        })
+        });
       } else {
         alert("bad credentials");
       }

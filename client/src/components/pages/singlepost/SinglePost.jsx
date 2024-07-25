@@ -12,7 +12,7 @@ export const SinglePost = () => {
   const { userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/post/${id}`).then((res) =>
+    fetch(`https://blog-backend-0ii5.onrender.com/post/${id}`).then((res) =>
       res.json().then((postInfo) => {
         setPostInfo(postInfo);
       })
@@ -24,7 +24,7 @@ export const SinglePost = () => {
     <div className=" ">
       <img
         className="max-h-96 w-full object-cover  object-center overflow-hidden"
-        src={`http://localhost:4000/${postInfo.cover}`}
+        src={`https://blog-backend-0ii5.onrender.com/${postInfo.cover}`}
         fallbackSrc="https://via.placeholder.com/300x200"
         alt="Post Cover"
       />
@@ -36,12 +36,12 @@ export const SinglePost = () => {
         </p>
         <time>{formatISO9075(new Date(postInfo.createdAt))}</time>
         {userInfo?.id === postInfo.author?._id && (
-            <Link to={`/edit/${postInfo._id}`}>
-          <div className="underline text-gray-500 ml-4 hover:text-red-500 flex">
+          <Link to={`/edit/${postInfo._id}`}>
+            <div className="underline text-gray-500 ml-4 hover:text-red-500 flex">
               <FiEdit className="m-1" />
               Edit
-          </div>
-            </Link>
+            </div>
+          </Link>
         )}
       </div>
       <div dangerouslySetInnerHTML={{ __html: postInfo.content }}></div>

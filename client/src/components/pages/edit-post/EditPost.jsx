@@ -13,7 +13,7 @@ export const EditPost = () => {
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:4000/post/'+ id).then((res) =>
+    fetch("https://blog-backend-0ii5.onrender.com/post/" + id).then((res) =>
       res.json().then((postInfo) => {
         setTitle(postInfo.title);
         setSummary(postInfo.summary);
@@ -22,26 +22,26 @@ export const EditPost = () => {
     );
   }, []);
 
-    const updatePost = async (e) => {
-      e.preventDefault();
+  const updatePost = async (e) => {
+    e.preventDefault();
     const data = new FormData();
     data.set("title", title);
     data.set("summary", summary);
-      data.set("content", content);
-      data.set('id', id);
+    data.set("content", content);
+    data.set("id", id);
     if (files[0]) {
       data.set("file", files[0]);
     }
 
-      fetch('http://localhost:4000/post', {
-        method: 'PUT',
-        body: data,
-        credentials: 'include'
-      }).then(res => {
-        if (res.ok) {
-          setRedirect(true);
-        }
-    })
+    fetch("https://blog-backend-0ii5.onrender.com/post", {
+      method: "PUT",
+      body: data,
+      credentials: "include",
+    }).then((res) => {
+      if (res.ok) {
+        setRedirect(true);
+      }
+    });
   };
 
   if (redirect) {
