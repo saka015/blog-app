@@ -86,6 +86,10 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
 // Check profile route
 app.get("/profile", authenticateToken, (req, res) => {
   const { token } = req.cookies;
