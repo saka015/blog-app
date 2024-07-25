@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
 const Post = require("./models/Post");
+require("dotenv").config();
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -14,9 +15,7 @@ const app = express();
 
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-const mongoURI =
-  process.env.MONGO_URI ||
-  "mongodb+srv://skn8454:saka123@cluster0.in6mqqz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 4000;
 
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
