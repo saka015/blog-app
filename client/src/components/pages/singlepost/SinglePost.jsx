@@ -20,7 +20,6 @@ export const SinglePost = () => {
   }, []);
 
   if (!postInfo) return <div>Post Not Found!</div>;
-  //TODO : ID based comparison to be done this is shit!
   return (
     <div className=" ">
       <img
@@ -36,7 +35,7 @@ export const SinglePost = () => {
           <span className="font-normal">by </span>@{postInfo.author.username}
         </p>
         <time>{formatISO9075(new Date(postInfo.createdAt))}</time>
-        {userInfo === postInfo.author.username && (
+        {userInfo?.id === postInfo.author?._id && (
             <Link to={`/edit/${postInfo._id}`}>
           <div className="underline text-gray-500 ml-4 hover:text-red-500 flex">
               <FiEdit className="m-1" />

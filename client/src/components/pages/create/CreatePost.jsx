@@ -1,9 +1,10 @@
 import { Input, Button, Textarea } from "@nextui-org/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Navigate } from "react-router-dom";
 import { Editor } from "../../common/editor/Editor";
+import { UserContext } from "../../../context/UserContext";
 
 const modules = {
   toolbar: [
@@ -57,6 +58,9 @@ export const CreatePost = () => {
   const [files, setFiles] = useState("");
   const [redirect, setRedirect] = useState(false);
 
+  const { userInfo } = useContext(UserContext);
+
+
   const CreateNewPost = async (e) => {
     const data = new FormData();
     data.set("title", title);
@@ -77,7 +81,12 @@ export const CreatePost = () => {
     }
   };
   if (redirect) {
+    window.location.reload();
     return <Navigate to={"/"} />;
+  }
+
+  if (!userInfo) {
+    return <Navigate to={"/login"} />;
   }
   return (
     <div>
@@ -104,6 +113,7 @@ export const CreatePost = () => {
           type="file"
           variant="underlined"
           label="Image"
+          required
           onChange={(e) => setFiles(e.target.files)}
         />
         <br />
